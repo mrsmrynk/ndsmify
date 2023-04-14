@@ -30,7 +30,7 @@ if (length(list.files(output_dir_path)) != 0) {
 las_catalog <- lidR::readLAScatalog(input_dir_path)
 lidR::opt_select(las_catalog) <- "xyz"
 lidR::opt_chunk_size(las_catalog) <- chunk_size
-lidR::opt_chunk_buffer(las_catalog) <- chunk_size / 5
+lidR::opt_chunk_buffer(las_catalog) <- chunk_size * .2
 
 # Classify ground points ----
 lidR::opt_output_files(las_catalog) <- file.path(
@@ -39,7 +39,7 @@ lidR::opt_output_files(las_catalog) <- file.path(
   "classified_{XLEFT}_{YTOP}")
 classified_las_catalog <- lidR::classify_ground(
   las_catalog,
-  algorithm = lidR::csf(cloth_resolution=1.0, rigidness=2L))
+  algorithm = lidR::csf(cloth_resolution=1., rigidness=2L))
 print("Ground points classified.")
 
 # Normalize point clouds ----
@@ -59,6 +59,6 @@ lidR::opt_output_files(normalized_las_catalog) <- file.path(
   "ndsm_{XLEFT}_{YTOP}")
 ndsm <- lidR::rasterize_canopy(
   normalized_las_catalog,
-  res = 0.5,
+  res = .5,
   algorithm = lidR::p2r())
 print("Normalized point clouds rasterized.")
